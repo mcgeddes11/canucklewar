@@ -1,0 +1,7 @@
+hockey_scraper
+pandas
+pytest
+pytest-cov
+requests
+beautifulsoup4
+luigi
