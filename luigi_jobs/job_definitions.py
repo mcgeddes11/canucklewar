@@ -31,8 +31,7 @@ class CustomLuigiJob:
 
     @abc.abstractmethod
     def create_task_list(self):
-        tasks = []
-        self.tasks = tasks
+        raise Exception("You need to define your task list in a subclass")
 
 
     def setup_logging(self):
@@ -71,14 +70,20 @@ class CustomLuigiJob:
             buildutils.create_folder(os.path.join(data_repo_path))
         self.job_config["data_repository"] = data_repo_path
 
+    def apply_config(self):
+        for t in self.tasks:
+            t.job = self.job_config
+
     def run_job(self) -> bool:
         self.init_data_repository()
         self.setup_logging()
         self.job_config["job_start"] = buildutils.utc_now()
         LOGGER.info('Config ID: {}'.format(self.job_config['config_id']))
         LOGGER.info('Interim Directory: {}'.format(self.job_config["data_repository"]))
-        ConfigurableTask.set_config(self.job_config)
+        # Create tasks calling the subclass create_task_list() method
         self.create_task_list()
+        # Explicitly add the job config parameter to each subtask
+        self.apply_config()
         self.create_output_folder_structure(self.tasks)
         luigi.build(
             self.tasks,

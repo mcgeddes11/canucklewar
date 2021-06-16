@@ -5,9 +5,7 @@ from multiprocessing import Manager
 # superclass that defines withConfig() method
 class ConfigurableTask(luigi.Task):
 
-    @classmethod
-    def set_config(cls, job_config):
-        if hasattr(ConfigurableTask, 'job'):
-            raise AttributeError('Config has already been set')
-        # Manager.dict() provides a proxy object which can be shared between multiple luigi processes
-        cls.job = Manager().dict(job_config)
+    def __init__(self):
+        # Create a job parameter to be filled later with the job config for every task
+        self.job = None
+        super(ConfigurableTask, self).__init__()
