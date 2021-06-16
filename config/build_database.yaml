@@ -1,0 +1,8 @@
+first_season: "20112012"
+last_season: "20202021"
+data_repository: "C:\\data\\canucklewar"
+
+# luigi variables
+local_scheduler: true
+luigi_worker_count: 6
+log_level: "DEBUG"
