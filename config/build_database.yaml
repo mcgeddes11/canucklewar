@@ -1,4 +1,4 @@
-first_season: "20112012"
+first_season: "20192020"
 last_season: "20202021"
 data_repository: "C:\\data\\canucklewar"
 
@@ -6,3 +6,6 @@ data_repository: "C:\\data\\canucklewar"
 local_scheduler: true
 luigi_worker_count: 6
 log_level: "DEBUG"
+
+# Run definition variables
+is_historical_build: true

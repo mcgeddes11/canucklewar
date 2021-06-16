@@ -9,12 +9,12 @@ def get_schedule(season_id: str) -> [dict]:
     response = requests.get(url)
     response.raise_for_status()
     data = response.json()
-    # TODO: unpack all games to a flat structure
     return data["dates"]
 
 def get_players(season_id: str) -> [dict]:
     # Get players for a season. Similar season_id as get_schedule.
     # Returns a dict, because we don't so much care who a player plays for, but that they exist
+    # Keys are player_ids
     teams = get_teams(include_rosters=True, season_id=season_id)
     # Get a list of players
     players = {}
@@ -23,15 +23,12 @@ def get_players(season_id: str) -> [dict]:
         for player in roster:
             person = player["person"]
             player_id = person["id"]
-            players[player_id] = {"id": player_id,
+            players[player_id] = {"player_id": player_id,
                                   "full_name": person["fullName"],
                                   "position_code": player["position"]["code"],
-                                  "position_type": player["position"]["type"]
+                                  "position_type": player["position"]["type"],
+                                  "jersey_number": player["jerseyNumber"] if "jerseyNumber" in player.keys() else None
                                   }
-            if "jerseyNumber" in player.keys():
-                players[player_id]["jersey_number"] = player["jerseyNumber"]
-            else:
-                players[player_id]["jersey_number"] = None
     return players
 
 def get_teams(include_rosters=False, season_id=None) -> [dict]:

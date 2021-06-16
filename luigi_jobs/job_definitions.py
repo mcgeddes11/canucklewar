@@ -1,17 +1,14 @@
 from __future__ import print_function
 
-import sys
-from copy import deepcopy
 import hashlib
 import json
 import utils.build_utils as buildutils
-from luigi_jobs.luigi_extensions import ConfigurableTask
 import logging
 import abc
 import os
 import luigi
 
-from luigi_jobs.build_database_tasks import TaskOne
+from luigi_jobs.build_database_tasks import GetScheduleData, GetPlayerData
 
 # config locations
 JOB_CONFIG_PATH = buildutils.absolute_path_from_project_root('configs/job.yaml')
@@ -88,8 +85,10 @@ class CustomLuigiJob:
         luigi.build(
             self.tasks,
             local_scheduler=self.job_config["local_scheduler"],
-            workers=self.job_config["luigi_worker_count"],
+            # workers=self.job_config["luigi_worker_count"],
+            workers=1,
             log_level=self.job_config["log_level"])
+
 
         success = all([task.complete() for task in self.tasks])
         return success
@@ -99,7 +98,8 @@ class BuildDatabaseJob(CustomLuigiJob):
 
     def create_task_list(self):
         tasks = []
-        tasks.append(TaskOne())
+        tasks.append(GetScheduleData())
+        tasks.append(GetPlayerData())
         self.tasks = tasks
 
 
